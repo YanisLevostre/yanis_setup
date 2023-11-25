@@ -1,3 +1,3 @@
 import maya.cmds as cmds
 def do_spaceswitch():
-    print ('this is spaceSwitch')
+    print ('this is groot')
