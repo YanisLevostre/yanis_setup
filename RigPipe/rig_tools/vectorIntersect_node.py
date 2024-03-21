@@ -42,34 +42,32 @@ vector_mid_dir2 = MVector(vector_2_point_a[0] - vector_1_point_a[0],
                           vector_2_point_a[2] - vector_1_point_a[2]
                           )
 
-mid_legth = vector_mid_dir1.length()
+mid_length = vector_mid_dir1.length()
 
 if vector_mid_dir1.length() != 0:
     # vec1_vec2 angle
     vec1_vec2_cos = vector1.normalize() * vector2.normalize()
-    vec1_vec2_angle = math.acos(abs(vec1_vec2_cos))
-    # print('vec1_vec2 angle: {}'.format(math.degrees(vec1_vec2_angle)))
+    vec1_vec2_angle = math.acos(vec1_vec2_cos)
+    print('vec1_vec2 angle: {}'.format(math.degrees(vec1_vec2_angle)))
 
     # vec1_vecMid angle
     vec1_vecMid_cos = vector1.normalize() * vector_mid_dir1.normalize()
     vec1_vecMid_angle = math.acos(abs(vec1_vecMid_cos))
-    # print('vec1_vecMid angle: {}'.format(math.degrees(vec1_vecMid_angle)))
+    print('vec1_vecMid angle: {}'.format(math.degrees(vec1_vecMid_angle)))
 
     # vec2_vecMid angle
     vec2_vecMid_cos = vector2.normalize() * vector_mid_dir2.normalize()
     vec2_vecMid_angle = math.acos(abs(vec2_vecMid_cos))
-    # print('vec2_vecMid angle: {}'.format(math.degrees(vec2_vecMid_angle)))
+    print('vec2_vecMid angle: {}'.format(math.degrees(vec2_vecMid_angle)))
 
     if math.sin(vec1_vec2_angle) != 0:
-        rapport_sinus = (mid_legth / 2.00) / math.sin((math.pi + vec1_vec2_angle) / 2.00)
+        rapport_sinus = (mid_length / 2.00) / math.sin(vec1_vec2_angle / 2.00)
         push_length = rapport_sinus * math.sin(vec1_vecMid_angle)
-        # print(push_legth)
+        print(push_length)
 
     else:
         # print('flat angle')
         push_length = 0
-
-
 
 else:
     # print('bindPose')
