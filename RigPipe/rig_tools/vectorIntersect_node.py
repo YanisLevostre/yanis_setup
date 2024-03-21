@@ -48,17 +48,17 @@ if vector_mid_dir1.length() != 0:
     # vec1_vec2 angle
     vec1_vec2_cos = vector1.normalize() * vector2.normalize()
     vec1_vec2_angle = math.acos(vec1_vec2_cos)
-    print('vec1_vec2 angle: {}'.format(math.degrees(vec1_vec2_angle)))
+    # print('vec1_vec2 angle: {}'.format(math.degrees(vec1_vec2_angle)))
 
     # vec1_vecMid angle
     vec1_vecMid_cos = vector1.normalize() * vector_mid_dir1.normalize()
     vec1_vecMid_angle = math.acos(abs(vec1_vecMid_cos))
-    print('vec1_vecMid angle: {}'.format(math.degrees(vec1_vecMid_angle)))
+    # print('vec1_vecMid angle: {}'.format(math.degrees(vec1_vecMid_angle)))
 
     # vec2_vecMid angle
     vec2_vecMid_cos = vector2.normalize() * vector_mid_dir2.normalize()
     vec2_vecMid_angle = math.acos(abs(vec2_vecMid_cos))
-    print('vec2_vecMid angle: {}'.format(math.degrees(vec2_vecMid_angle)))
+    # print('vec2_vecMid angle: {}'.format(math.degrees(vec2_vecMid_angle)))
 
     if math.sin(vec1_vec2_angle) != 0:
         rapport_sinus = (mid_length / 2.00) / math.sin(vec1_vec2_angle / 2.00)
