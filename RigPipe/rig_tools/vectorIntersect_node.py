@@ -7,12 +7,16 @@ import math
 #####
 
 # datas
+joint1_ratio = 0.1
+joint2_ratio = 0.5
+scale = 2
 # temp maya import datas
 vector_1_point_a = cmds.getAttr('locator1.translate')[0]
 vector_1_point_b = cmds.getAttr('locator2.translate')[0]
 vector_2_point_a = cmds.getAttr('locator3.translate')[0]
 vector_2_point_b = cmds.getAttr('locator4.translate')[0]
 up_point = cmds.getAttr('locator8.translate')[0]
+
 # vector 1
 # vector_1_point_a = (0, 0, -2)
 # vector_1_point_b = (-6, 0, -2)
@@ -63,7 +67,7 @@ if vector_mid_dir1.length() != 0:
     if math.sin(vec1_vec2_angle) != 0:
         rapport_sinus = (mid_length / 2.00) / math.sin(vec1_vec2_angle / 2.00)
         push_length = rapport_sinus * math.sin(vec1_vecMid_angle)
-        print(push_length)
+        #print(push_length)
 
     else:
         # print('flat angle')
@@ -78,14 +82,14 @@ else:
 cmds.setAttr('locator6.tx', push_length)
 cmds.setAttr('locator7.translate', mid_point[0], mid_point[1], mid_point[2])
 
-# mid-front axis
+# mid-up axis
 vectorUp_temp = MVector(up_point[0] - mid_point[0],
                         up_point[1] - mid_point[1],
                         up_point[2] - mid_point[2]
                         )
 vectorUp_temp.normalize()
 
-# mid-up temp axis
+# mid-front temp axis
 vectorFront = MVector(vector_2_point_a[0] - mid_point[0],
                       vector_2_point_a[1] - mid_point[1],
                       vector_2_point_a[2] - mid_point[2]
@@ -114,4 +118,82 @@ cmds.xform('locator7', ws=True, m=[vectorUp[0], vectorUp[1], vectorUp[2], 0,
                                    vectorFront[0], vectorFront[1], vectorFront[2], 0,
                                    mid_point[0], mid_point[1], mid_point[2], 1])
 
+
 print(push_matrix)
+push_point = (push_matrix[12],push_matrix[13],push_matrix[14])
+print (push_point)
+# find matrix joint vect1
+vector_1_pushtarget = MVector(vector_1_point_b[0] - push_point[0],
+                              vector_1_point_b[1] - push_point[1],
+                              vector_1_point_b[2] - push_point[2]
+                              )
+
+joint_vect1_pos = (MPoint(push_point) + (vector_1_pushtarget * joint1_ratio))
+
+joint_vect1_front = MVector(joint_vect1_pos[0] - push_point[0],
+                      joint_vect1_pos[1] - push_point[1],
+                      joint_vect1_pos[2] - push_point[2])
+joint_vect1_front.normalize()
+
+joint_vect1_up_temp = MVector(up_point[0] - joint_vect1_pos[0],
+                      up_point[1] - joint_vect1_pos[1],
+                      up_point[2] - joint_vect1_pos[2])
+
+joint_vect1_up_temp.normalize()
+
+joint_vect1_side = joint_vect1_up_temp^joint_vect1_front
+
+joint_vect1_side.normalize()
+
+joint_vect1_up = joint_vect1_side^joint_vect1_front
+
+joint1_matrix = MMatrix((joint_vect1_up[0]*scale, joint_vect1_up[1]*scale, joint_vect1_up[2]*scale, 0,
+                      joint_vect1_side[0]*scale, joint_vect1_side[1]*scale, joint_vect1_side[2]*scale, 0,
+                      joint_vect1_front[0]*scale, joint_vect1_front[1]*scale, joint_vect1_front[2]*scale, 0,
+                      joint_vect1_pos[0], joint_vect1_pos[1], joint_vect1_pos[2], 1
+                      ))
+
+
+
+vector_2_pushtarget = MVector(vector_2_point_b[0] - push_point[0],
+                              vector_2_point_b[1] - push_point[1],
+                              vector_2_point_b[2] - push_point[2]
+                              )
+
+# find joint 2 matrix
+
+
+joint_vect2_pos = (MPoint(push_point) + (vector_2_pushtarget * joint2_ratio))
+
+joint_vect2_front = MVector(joint_vect2_pos[0] - push_point[0],
+                      joint_vect2_pos[1] - push_point[1],
+                      joint_vect2_pos[2] - push_point[2])
+joint_vect2_front.normalize()
+
+joint_vect2_up_temp = MVector(up_point[0] - joint_vect2_pos[0],
+                      up_point[1] - joint_vect2_pos[1],
+                      up_point[2] - joint_vect2_pos[2])
+
+joint_vect2_up_temp.normalize()
+
+joint_vect2_side = joint_vect2_up_temp^joint_vect2_front
+
+joint_vect2_side.normalize()
+
+joint_vect2_up = joint_vect2_side^joint_vect2_front
+
+joint2_matrix = MMatrix((joint_vect2_up[0]*scale, joint_vect2_up[1]*scale, joint_vect2_up[2]*scale, 0,
+                      joint_vect2_side[0]*scale, joint_vect2_side[1]*scale, joint_vect2_side[2]*scale, 0,
+                      joint_vect2_front[0]*scale, joint_vect2_front[1]*scale, joint_vect2_front[2]*scale, 0,
+                      joint_vect2_pos[0], joint_vect2_pos[1], joint_vect2_pos[2], 1
+                      ))
+
+cmds.xform('locator9', ws=True, m=[joint_vect1_up[0]*scale, joint_vect1_up[1]*scale, joint_vect1_up[2]*scale, 0,
+                      joint_vect1_side[0]*scale, joint_vect1_side[1]*scale, joint_vect1_side[2]*scale, 0,
+                      joint_vect1_front[0]*scale, joint_vect1_front[1]*scale, joint_vect1_front[2]*scale, 0,
+                      joint_vect1_pos[0], joint_vect1_pos[1], joint_vect1_pos[2], 1])
+
+cmds.xform('locator10', ws=True, m=[joint_vect2_up[0], joint_vect2_up[1], joint_vect2_up[2], 0,
+                      joint_vect2_side[0], joint_vect2_side[1], joint_vect2_side[2], 0,
+                      joint_vect2_front[0], joint_vect2_front[1], joint_vect2_front[2], 0,
+                      joint_vect2_pos[0], joint_vect2_pos[1], joint_vect2_pos[2], 1])
