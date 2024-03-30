@@ -10,29 +10,19 @@ nodeId = OpenMaya.MTypeId(0x200fff)
 
 class YL_intersection(OpenMayaMPx.MPxNode):
     inScale = OpenMaya.MObject()
-    inJoint1ratio = OpenMaya.MObject()
-    inJoint2ratio = OpenMaya.MObject()
+    inPinch = OpenMaya.MObject()
+    inPushLimit = OpenMaya.MObject()
     inVec1_a = OpenMaya.MObject()
     inVec1_b = OpenMaya.MObject()
     inVec2_a = OpenMaya.MObject()
     inVec2_b = OpenMaya.MObject()
     inUp_point = OpenMaya.MObject()
 
-    outPushPos = OpenMaya.MObject()
-    outPushXAxis = OpenMaya.MObject()
-    outPushYAxis = OpenMaya.MObject()
-    outPushZAxis = OpenMaya.MObject()
-
-    outPushJoint1Pos = OpenMaya.MObject()
-    outPushJoint1XAxis = OpenMaya.MObject()
-    outPushJoint1YAxis = OpenMaya.MObject()
-    outPushJoint1ZAxis = OpenMaya.MObject()
-
-    outPushJoint2Pos = OpenMaya.MObject()
-    outPushJoint2XAxis = OpenMaya.MObject()
-    outPushJoint2YAxis = OpenMaya.MObject()
-    outPushJoint2ZAxis = OpenMaya.MObject()
-
+    outPoint0 = OpenMaya.MObject()
+    outPoint1 = OpenMaya.MObject()
+    outPoint2 = OpenMaya.MObject()
+    outPoint3 = OpenMaya.MObject()
+    outPoint4= OpenMaya.MObject()
     def __init__(self):
         OpenMayaMPx.MPxNode.__init__(self)
 
@@ -40,9 +30,10 @@ class YL_intersection(OpenMayaMPx.MPxNode):
 
         def vector_intersect(vector_1_point_a, vector_1_point_b, vector_2_point_a, vector_2_point_b, up_point,
                              scale,
-                             joint1_ratio, joint2_ratio):
+                             pinch, pushLimit):
             # temp maya import datas
-
+            joint1_ratio = pinch
+            joint2_ratio = pinch
             # vector 1
             # vector_1_point_a = (0, 0, -2)
             # vector_1_point_b = (-6, 0, -2)
@@ -92,8 +83,11 @@ class YL_intersection(OpenMayaMPx.MPxNode):
 
                 if math.sin(vec1_vec2_angle) != 0:
                     rapport_sinus = (mid_length / 2.00) / math.sin(vec1_vec2_angle / 2.00)
+
                     push_length = rapport_sinus * math.sin(vec1_vecMid_angle)
-                    # print(push_length)
+
+                    if push_length > pushLimit:
+                        push_length = pushLimit
 
                 else:
                     # print('flat angle')
@@ -212,63 +206,52 @@ class YL_intersection(OpenMayaMPx.MPxNode):
 
 
         dataHandleScale = dataBlock.inputValue(YL_intersection.inScale)
-        dataHandleJoint1ratio = dataBlock.inputValue(YL_intersection.inJoint1ratio)
-        dataHandleJoint2ratio = dataBlock.inputValue(YL_intersection.inJoint2ratio)
+        dataHandlePinch = dataBlock.inputValue(YL_intersection.inPinch)
+        dataHandlePushLimit = dataBlock.inputValue(YL_intersection.inPushLimit)
         dataHandleVect1_a = dataBlock.inputValue(YL_intersection.inVec1_a)
         dataHandleVect1_b = dataBlock.inputValue(YL_intersection.inVec1_b)
         dataHandleVect2_a = dataBlock.inputValue(YL_intersection.inVec2_a)
         dataHandleVect2_b = dataBlock.inputValue(YL_intersection.inVec2_b)
         dataHandleUp_point = dataBlock.inputValue(YL_intersection.inUp_point)
 
+
         inScaleVal = dataHandleScale.asFloat()
-        inJoint1ratioVal = dataHandleJoint1ratio.asFloat()
-        inJoint2ratioeVal = dataHandleJoint2ratio.asFloat()
+        inJPinchVal = dataHandlePinch.asFloat()
+        inJoint2PushLimitVal = dataHandlePushLimit.asFloat()
         inVect1_aVal = dataHandleVect1_a.asFloat3()
         inVect1_bVal = dataHandleVect1_b.asFloat3()
         inVect2_aVal = dataHandleVect2_a.asFloat3()
         inVect2_bVal = dataHandleVect2_b.asFloat3()
         inUp_pointVal = dataHandleUp_point.asFloat3()
 
-        outPushjoint = \
-            vector_intersect(inVect1_aVal, inVect1_bVal, inVect2_aVal, inVect2_bVal, inUp_pointVal, inScaleVal,
-                             inJoint1ratioVal, inJoint2ratioeVal)['pushjoint']
+        datas = vector_intersect(inVect1_aVal, inVect1_bVal, inVect2_aVal, inVect2_bVal, inUp_pointVal,
+                         inScaleVal,
+                         inJPinchVal, inJoint2PushLimitVal)
 
-        outPushjoint1 = \
-            vector_intersect(inVect1_aVal, inVect1_bVal, inVect2_aVal, inVect2_bVal, inUp_pointVal, inScaleVal,
-                             inJoint1ratioVal, inJoint2ratioeVal)['joint1']
-        outPushjoint2 = \
-            vector_intersect(inVect1_aVal, inVect1_bVal, inVect2_aVal, inVect2_bVal, inUp_pointVal, inScaleVal,
-                             inJoint1ratioVal, inJoint2ratioeVal)['joint2']
 
-        dataHandleOutPushJointPos = dataBlock.outputValue(YL_intersection.outPushPos)
-        dataHandleOutPushJointXAxis = dataBlock.outputValue(YL_intersection.outPushXAxis)
-        dataHandleOutPushJointYAxis = dataBlock.outputValue(YL_intersection.outPushYAxis)
-        dataHandleOutPushJointZAxis = dataBlock.outputValue(YL_intersection.outPushZAxis)
+        point1 = inVect1_bVal
+        point2 = datas['joint1'][9:]
+        point3 = datas['pushjoint'][9:]
+        point4 = datas['joint2'][9:]
+        point5 = inVect2_bVal
 
-        dataHandleOutPushJoint1Pos = dataBlock.outputValue(YL_intersection.outPushJoint1Pos)
-        dataHandleOutPushJoint1XAxis = dataBlock.outputValue(YL_intersection.outPushJoint1XAxis)
-        dataHandleOutPushJoint1YAxis = dataBlock.outputValue(YL_intersection.outPushJoint1YAxis)
-        dataHandleOutPushJoint1ZAxis = dataBlock.outputValue(YL_intersection.outPushJoint1ZAxis)
+        dataHandlePoint0 = dataBlock.outputValue(YL_intersection.outPoint0)
+        dataHandlePoint0.set3Float(point1[0],point1[1],point1[2])
 
-        dataHandleOutPushJoint2Pos = dataBlock.outputValue(YL_intersection.outPushJoint2Pos)
-        dataHandleOutPushJoint2XAxis = dataBlock.outputValue(YL_intersection.outPushJoint2XAxis)
-        dataHandleOutPushJoint2YAxis = dataBlock.outputValue(YL_intersection.outPushJoint2YAxis)
-        dataHandleOutPushJoint2ZAxis = dataBlock.outputValue(YL_intersection.outPushJoint2ZAxis)
+        dataHandlePoint0 = dataBlock.outputValue(YL_intersection.outPoint1)
+        dataHandlePoint0.set3Float(point2[0],point2[1],point2[2])
 
-        dataHandleOutPushJointPos.set3Float(outPushjoint[9], outPushjoint[10], outPushjoint[11])
-        dataHandleOutPushJointXAxis.set3Float(outPushjoint[0], outPushjoint[1], outPushjoint[2])
-        dataHandleOutPushJointYAxis.set3Float(outPushjoint[3], outPushjoint[4], outPushjoint[5])
-        dataHandleOutPushJointZAxis.set3Float(outPushjoint[6], outPushjoint[7], outPushjoint[8])
+        dataHandlePoint0 = dataBlock.outputValue(YL_intersection.outPoint2)
+        dataHandlePoint0.set3Float(point3[0],point3[1],point3[2])
 
-        dataHandleOutPushJoint1Pos.set3Float(outPushjoint1[9], outPushjoint1[10], outPushjoint1[11])
-        dataHandleOutPushJoint1XAxis.set3Float(outPushjoint1[0], outPushjoint1[1], outPushjoint1[2])
-        dataHandleOutPushJoint1YAxis.set3Float(outPushjoint1[3], outPushjoint1[4], outPushjoint1[5])
-        dataHandleOutPushJoint1ZAxis.set3Float(outPushjoint1[6], outPushjoint1[7], outPushjoint1[8])
+        dataHandlePoint0 = dataBlock.outputValue(YL_intersection.outPoint3)
+        dataHandlePoint0.set3Float(point4[0],point4[1],point4[2])
 
-        dataHandleOutPushJoint2Pos.set3Float(outPushjoint2[9], outPushjoint2[10], outPushjoint2[11])
-        dataHandleOutPushJoint2XAxis.set3Float(outPushjoint2[0], outPushjoint2[1], outPushjoint2[2])
-        dataHandleOutPushJoint2YAxis.set3Float(outPushjoint2[3], outPushjoint2[4], outPushjoint2[5])
-        dataHandleOutPushJoint2ZAxis.set3Float(outPushjoint2[6], outPushjoint2[7], outPushjoint2[8])
+        dataHandlePoint0 = dataBlock.outputValue(YL_intersection.outPoint4)
+        dataHandlePoint0.set3Float(point5[0],point5[1],point5[2])
+
+
+        dataBlock.setClean(plug)
 
         dataBlock.setClean(plug)
 
@@ -280,94 +263,36 @@ def nodeCreator():
 def nodeInitializer():
     mFnAttr = OpenMaya.MFnNumericAttribute()
 
+
+    YL_intersection.outPoint0 = mFnAttr.create('outPoint0', 'outPoint0', OpenMaya.MFnNumericData.k3Float)
+    mFnAttr.setReadable(1)
+    mFnAttr.setWritable(0)
+    mFnAttr.setStorable(0)
+    mFnAttr.setKeyable(0)
+
+    YL_intersection.outPoint1 = mFnAttr.create('outPoint1', 'outPoint1', OpenMaya.MFnNumericData.k3Float)
+    mFnAttr.setReadable(1)
+    mFnAttr.setWritable(0)
+    mFnAttr.setStorable(0)
+    mFnAttr.setKeyable(0)
+    YL_intersection.outPoint2 = mFnAttr.create('outPoint2', 'outPoint2', OpenMaya.MFnNumericData.k3Float)
+    mFnAttr.setReadable(1)
+    mFnAttr.setWritable(0)
+    mFnAttr.setStorable(0)
+    mFnAttr.setKeyable(0)
+    YL_intersection.outPoint3 = mFnAttr.create('outPoint3', 'outPoint3', OpenMaya.MFnNumericData.k3Float)
+    mFnAttr.setReadable(1)
+    mFnAttr.setWritable(0)
+    mFnAttr.setStorable(0)
+    mFnAttr.setKeyable(0)
+    YL_intersection.outPoint4= mFnAttr.create('outPoint4', 'outPoint4', OpenMaya.MFnNumericData.k3Float)
+    mFnAttr.setReadable(1)
+    mFnAttr.setWritable(0)
+    mFnAttr.setStorable(0)
+    mFnAttr.setKeyable(0)
+
     # push joint
     # output attributes
-    YL_intersection.outPushPos = mFnAttr.create("pushPos", "ppos", OpenMaya.MFnNumericData.k3Float, 0)
-
-    mFnAttr.setReadable(1)
-    mFnAttr.setWritable(0)
-    mFnAttr.setStorable(0)
-    mFnAttr.setKeyable(0)
-
-    YL_intersection.outPushXAxis = mFnAttr.create("pushAxisX", "pXaxis", OpenMaya.MFnNumericData.k3Float, 0)
-
-    mFnAttr.setReadable(1)
-    mFnAttr.setWritable(0)
-    mFnAttr.setStorable(0)
-    mFnAttr.setKeyable(0)
-
-    YL_intersection.outPushYAxis = mFnAttr.create("pushAxisY", "pYaxis", OpenMaya.MFnNumericData.k3Float, 0)
-
-    mFnAttr.setReadable(1)
-    mFnAttr.setWritable(0)
-    mFnAttr.setStorable(0)
-    mFnAttr.setKeyable(0)
-
-    YL_intersection.outPushZAxis = mFnAttr.create("pushAxisZ", "pZaxis", OpenMaya.MFnNumericData.k3Float, 0)
-
-    mFnAttr.setReadable(1)
-    mFnAttr.setWritable(0)
-    mFnAttr.setStorable(0)
-    mFnAttr.setKeyable(0)
-
-    # push joint1
-    YL_intersection.outPushJoint1Pos = mFnAttr.create("vect1Pos", "v1pos", OpenMaya.MFnNumericData.k3Float, 0)
-
-    mFnAttr.setReadable(1)
-    mFnAttr.setWritable(0)
-    mFnAttr.setStorable(0)
-    mFnAttr.setKeyable(0)
-
-    YL_intersection.outPushJoint1XAxis = mFnAttr.create("vect1XAxis", "v1Xaxis", OpenMaya.MFnNumericData.k3Float, 0)
-
-    mFnAttr.setReadable(1)
-    mFnAttr.setWritable(0)
-    mFnAttr.setStorable(0)
-    mFnAttr.setKeyable(0)
-
-    YL_intersection.outPushJoint1YAxis = mFnAttr.create("vect1YAxis", "v1Yaxis", OpenMaya.MFnNumericData.k3Float, 0)
-
-    mFnAttr.setReadable(1)
-    mFnAttr.setWritable(0)
-    mFnAttr.setStorable(0)
-    mFnAttr.setKeyable(0)
-
-    YL_intersection.outPushJoint1ZAxis = mFnAttr.create("vect1ZAxis", "v1Zaxis", OpenMaya.MFnNumericData.k3Float, 0)
-
-    mFnAttr.setReadable(1)
-    mFnAttr.setWritable(0)
-    mFnAttr.setStorable(0)
-    mFnAttr.setKeyable(0)
-
-    # push joint2
-    YL_intersection.outPushJoint2Pos = mFnAttr.create("vect2Pos", "v2pos", OpenMaya.MFnNumericData.k3Float, 0)
-
-    mFnAttr.setReadable(1)
-    mFnAttr.setWritable(0)
-    mFnAttr.setStorable(0)
-    mFnAttr.setKeyable(0)
-
-    YL_intersection.outPushJoint2XAxis = mFnAttr.create("vect2XAxis", "v2Xaxis", OpenMaya.MFnNumericData.k3Float, 0)
-
-    mFnAttr.setReadable(1)
-    mFnAttr.setWritable(0)
-    mFnAttr.setStorable(0)
-    mFnAttr.setKeyable(0)
-
-    YL_intersection.outPushJoint2YAxis = mFnAttr.create("vect2YAxis", "v2Yaxis", OpenMaya.MFnNumericData.k3Float, 0)
-
-    mFnAttr.setReadable(1)
-    mFnAttr.setWritable(0)
-    mFnAttr.setStorable(0)
-    mFnAttr.setKeyable(0)
-
-    YL_intersection.outPushJoint2ZAxis = mFnAttr.create("vect2ZAxis", "v2Zaxis", OpenMaya.MFnNumericData.k3Float, 0)
-
-    mFnAttr.setReadable(1)
-    mFnAttr.setWritable(0)
-    mFnAttr.setStorable(0)
-    mFnAttr.setKeyable(0)
-
     # input attributes
     YL_intersection.inScale = mFnAttr.create("scale", "s", OpenMaya.MFnNumericData.kFloat, 1.0)
 
@@ -376,14 +301,14 @@ def nodeInitializer():
     mFnAttr.setStorable(1)
     mFnAttr.setKeyable(1)
 
-    YL_intersection.inJoint1ratio = mFnAttr.create("joint1_ratio", "j1r", OpenMaya.MFnNumericData.kFloat, 0.1)
+    YL_intersection.inPinch = mFnAttr.create("pinch", "pinch", OpenMaya.MFnNumericData.kFloat, 0.1)
 
     mFnAttr.setReadable(1)
     mFnAttr.setWritable(1)
     mFnAttr.setStorable(1)
     mFnAttr.setKeyable(1)
 
-    YL_intersection.inJoint2ratio = mFnAttr.create("joint2_ratio", "j2r", OpenMaya.MFnNumericData.kFloat, 0.1)
+    YL_intersection.inPushLimit = mFnAttr.create("pushLimit", "pushLimit", OpenMaya.MFnNumericData.kFloat, 0.1)
 
     mFnAttr.setReadable(1)
     mFnAttr.setWritable(1)
@@ -395,74 +320,58 @@ def nodeInitializer():
     mFnAttr.setReadable(1)
     mFnAttr.setWritable(1)
     mFnAttr.setStorable(1)
-    mFnAttr.setKeyable(1)
+    mFnAttr.setKeyable(0)
     YL_intersection.inVec1_b = mFnAttr.create("vect1_b", 'v1b', OpenMaya.MFnNumericData.k3Float)
 
     mFnAttr.setReadable(1)
     mFnAttr.setWritable(1)
     mFnAttr.setStorable(1)
-    mFnAttr.setKeyable(1)
+    mFnAttr.setKeyable(0)
     YL_intersection.inVec2_a = mFnAttr.create("vect2_a", 'v2a', OpenMaya.MFnNumericData.k3Float)
 
     mFnAttr.setReadable(1)
     mFnAttr.setWritable(1)
     mFnAttr.setStorable(1)
-    mFnAttr.setKeyable(1)
+    mFnAttr.setKeyable(0)
 
     YL_intersection.inVec2_b = mFnAttr.create("vect2_b", "v2b", OpenMaya.MFnNumericData.k3Float)
 
     mFnAttr.setReadable(1)
     mFnAttr.setWritable(1)
     mFnAttr.setStorable(1)
-    mFnAttr.setKeyable(1)
+    mFnAttr.setKeyable(0)
 
     YL_intersection.inUp_point = mFnAttr.create("up_point", "up", OpenMaya.MFnNumericData.k3Float)
 
     mFnAttr.setReadable(1)
     mFnAttr.setWritable(1)
     mFnAttr.setStorable(1)
-    mFnAttr.setKeyable(1)
+    mFnAttr.setKeyable(0)
 
     YL_intersection.addAttribute(YL_intersection.inScale)
-    YL_intersection.addAttribute(YL_intersection.inJoint1ratio)
-    YL_intersection.addAttribute(YL_intersection.inJoint2ratio)
+    YL_intersection.addAttribute(YL_intersection.inPinch)
+    YL_intersection.addAttribute(YL_intersection.inPushLimit)
     YL_intersection.addAttribute(YL_intersection.inVec1_a)
     YL_intersection.addAttribute(YL_intersection.inVec1_b)
     YL_intersection.addAttribute(YL_intersection.inVec2_a)
     YL_intersection.addAttribute(YL_intersection.inVec2_b)
     YL_intersection.addAttribute(YL_intersection.inUp_point)
+    YL_intersection.addAttribute(YL_intersection.outPoint0)
+    YL_intersection.addAttribute(YL_intersection.outPoint1)
+    YL_intersection.addAttribute(YL_intersection.outPoint2)
+    YL_intersection.addAttribute(YL_intersection.outPoint3)
+    YL_intersection.addAttribute(YL_intersection.outPoint4)
 
-    YL_intersection.addAttribute(YL_intersection.outPushPos)
-    YL_intersection.addAttribute(YL_intersection.outPushXAxis)
-    YL_intersection.addAttribute(YL_intersection.outPushYAxis)
-    YL_intersection.addAttribute(YL_intersection.outPushZAxis)
+    for output in [YL_intersection.outPoint0,YL_intersection.outPoint1,YL_intersection.outPoint2,YL_intersection.outPoint3,YL_intersection.outPoint4]:
 
-    YL_intersection.addAttribute(YL_intersection.outPushJoint1Pos)
-    YL_intersection.addAttribute(YL_intersection.outPushJoint1XAxis)
-    YL_intersection.addAttribute(YL_intersection.outPushJoint1YAxis)
-    YL_intersection.addAttribute(YL_intersection.outPushJoint1ZAxis)
-
-    YL_intersection.addAttribute(YL_intersection.outPushJoint2Pos)
-    YL_intersection.addAttribute(YL_intersection.outPushJoint2XAxis)
-    YL_intersection.addAttribute(YL_intersection.outPushJoint2YAxis)
-    YL_intersection.addAttribute(YL_intersection.outPushJoint2ZAxis)
-
-    for attr in (
-            YL_intersection.inScale, YL_intersection.inJoint1ratio, YL_intersection.inJoint2ratio,
-            YL_intersection.inVec1_b,
-            YL_intersection.inVec1_a, YL_intersection.inVec2_a, YL_intersection.inVec2_b, YL_intersection.inUp_point):
-        YL_intersection.attributeAffects(attr, YL_intersection.outPushPos)
-        YL_intersection.attributeAffects(attr, YL_intersection.outPushXAxis)
-        YL_intersection.attributeAffects(attr, YL_intersection.outPushYAxis)
-        YL_intersection.attributeAffects(attr, YL_intersection.outPushZAxis)
-        YL_intersection.attributeAffects(attr, YL_intersection.outPushJoint1Pos)
-        YL_intersection.attributeAffects(attr, YL_intersection.outPushJoint1XAxis)
-        YL_intersection.attributeAffects(attr, YL_intersection.outPushJoint1YAxis)
-        YL_intersection.attributeAffects(attr, YL_intersection.outPushJoint1ZAxis)
-        YL_intersection.attributeAffects(attr, YL_intersection.outPushJoint2Pos)
-        YL_intersection.attributeAffects(attr, YL_intersection.outPushJoint2XAxis)
-        YL_intersection.attributeAffects(attr, YL_intersection.outPushJoint2YAxis)
-        YL_intersection.attributeAffects(attr, YL_intersection.outPushJoint2ZAxis)
+        YL_intersection.attributeAffects(YL_intersection.inScale, output)
+        YL_intersection.attributeAffects(YL_intersection.inPinch,output)
+        YL_intersection.attributeAffects(YL_intersection.inPushLimit, output)
+        YL_intersection.attributeAffects(YL_intersection.inVec1_a, output)
+        YL_intersection.attributeAffects(YL_intersection.inVec1_b, output)
+        YL_intersection.attributeAffects(YL_intersection.inVec2_a, output)
+        YL_intersection.attributeAffects(YL_intersection.inVec2_b, output)
+        YL_intersection.attributeAffects(YL_intersection.inUp_point, output)
 
 
 def initializePlugin(mobject):
