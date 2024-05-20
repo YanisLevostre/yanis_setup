@@ -5,6 +5,10 @@ from constraint import multMatrix
 def do_spaceswitch(module_name=None, guideList=None, parent_list=None,
                    channel=['translate', 'rotate', 'scale']):
 
+    ''' module_name = C_module
+        guideList = {guide:transform_input}
+        parentList = [local, layout, global, world]'''
+
 
     # create groups and add locators
     space_offsets = cmds.group(em=True, n=module_name + '_spaceOffsets_grp')
