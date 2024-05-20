@@ -1,0 +1,132 @@
+{
+  "arm": {
+    "limb00_": "shoulder_",
+    "limb01_": "elbow_",
+    "limb02_": "wrist_",
+    "limb_": "arm_",
+    "limb00Bend_": "shoulderBend_",
+    "limb01ABend_": "elbowABend_",
+    "limb01BBend_": "elbowBBend_",
+    "limb02Bend_": "wristBend_",
+    "limb00MidBend_": "shoulderMidBend_",
+    "limb01MidBend_": "elbowMidBend_"
+
+  },
+  "leg": {
+    "limb00_": "thigh_",
+    "limb01_": "knee_",
+    "limb02_": "ankle_",
+    "limb_": "leg_",
+    "hand_": "foot_",
+    "limb00Bend_": "thighBend_",
+    "limb01ABend_": "kneeABend_",
+    "limb01BBend_": "kneeBBend_",
+    "limb02Bend_": "ankleBend_",
+    "limb00MidBend_": "thighMidBend_",
+    "limb01MidBend_": "kneeMidBend_",
+    "handIkHandle_": "footIkHandle_"
+  },
+  "clavicle": {
+    "clavicleEnd_": "shoulder_"
+  },
+  "hip": {
+    "clavicleEnd_": "thigh_",
+    "clavicle_": "hip_"
+  },
+  "index": {
+    "finger": "index",
+    "toe01": "hand",
+    "toe02": "hand",
+    "toe03": "hand"
+  },
+  "thumb": {
+    "finger": "thumb",
+    "toe01": "hand",
+    "toe02": "hand",
+    "toe03": "hand"
+  },
+  "middle": {
+    "finger": "middle",
+    "toe01": "hand",
+    "toe02": "hand",
+    "toe03": "hand"
+  },
+  "ring": {
+    "finger": "ring",
+    "toe01": "hand",
+    "toe02": "hand",
+    "toe03": "hand"
+  },
+  "pinky": {
+    "finger": "pinky",
+    "toe01": "hand",
+    "toe02": "hand",
+    "toe03": "hand"
+  },
+  "indexToe": {
+    "finger": "indexToe",
+    "toe01": "foot",
+    "toe02": "foot",
+    "toe03": "foot"
+  },
+  "thumbToe": {
+    "finger": "thumbToe",
+    "toe01": "foot",
+    "toe02": "foot",
+    "toe03": "foot"
+  },
+  "middleToe": {
+    "finger": "middleToe",
+    "toe01": "foot",
+    "toe02": "foot",
+    "toe03": "foot"
+  },
+  "ringToe": {
+    "finger": "ringToe",
+    "toe01": "foot",
+    "toe02": "foot",
+    "toe03": "foot"
+  },
+  "pinkyToe": {
+    "finger": "pinkyToe",
+    "toe01": "foot",
+    "toe02": "foot",
+    "toe03": "foot"
+  },
+  "shoulderBend":{
+    "spline": "shoulderBend",
+    "start": "shoulderBend",
+    "mid": "shoulderMidBend",
+    "end": "elbowABend"
+  },
+  "elbowBend":{
+    "spline": "elbowBend",
+    "start": "elbowBBend",
+    "mid": "elbowMidBend_",
+    "end": "wristBend_"
+  },
+  "thighBend":{
+    "spline": "thighBend",
+    "start": "thighBend",
+    "mid": "thighMidBend",
+    "end": "kneeABend"
+  },
+  "kneeBend":{
+    "spline": "kneeBend",
+    "start": "kneeBBend",
+    "mid": "kneeMidBend_",
+    "end": "ankleBend_"
+  },
+  "spineBend": {
+    "spline": "spineBend",
+    "start": "hip",
+    "mid": "spineMid",
+    "end": "chest"
+  },
+  "neckBend": {
+    "spline": "neckBend",
+    "start": "neckBaseIk",
+    "mid": "neckMid",
+    "end": "neckEndIk"
+  }
+}
