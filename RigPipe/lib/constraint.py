@@ -19,8 +19,8 @@ def parentMatrix(source = None, target = None):
     cmds.connectAttr(dec+'.outputRotate',target+'.rotate')
     cmds.connectAttr(dec+'.outputScale',target+'.scale')
 
-def directConnection(source = None, target = None):
-    cmds.connectAttr(source + '.translate', target + '.translate')
-    cmds.connectAttr(source + '.rotate', target + '.rotate')
-    cmds.connectAttr(source + '.scale', target + '.scale')
+def directConnection(source = None, target = None, force = True):
+    cmds.connectAttr(source + '.translate', target + '.translate', f = force)
+    cmds.connectAttr(source + '.rotate', target + '.rotate', f = force)
+    cmds.connectAttr(source + '.scale', target + '.scale', f = force)
 
