@@ -4,7 +4,7 @@ import maya.api.OpenMaya as om
 source_mesh = 'source1'
 target_mesh = 'target'
 shape_mesh = 'shape'
-
+vertex_exception = [60,111,57,56,58,115,59,253,203,201,202,249]
 def shape_transfer(source_mesh,target_mesh,shape_mesh):
     # get ref vertex
     vertex_count = cmds.polyEvaluate(source_mesh, vertex=True)
@@ -24,12 +24,18 @@ def shape_transfer(source_mesh,target_mesh,shape_mesh):
                 distance = vector.length()
                 distance_dict[distance] = source_vtx_id
 
+            if shape_vtx_id in vertex_exception:
+                for id in vertex_exception:
+                    if id in distance_dict:
+                        del distance_dict[id]
+
             sorted_distance = sorted(distance_dict)
             if shape_vtx_id != distance_dict[sorted_distance[0]]:
                 ref_vertex_dict[shape_vtx_id] = distance_dict[sorted_distance[0]]
             else:
                 ref_vertex_dict[shape_vtx_id] = distance_dict[sorted_distance[1]]
-
+            if shape_vtx_id == 60:
+                print(ref_vertex_dict[shape_vtx_id])
             # get source matrix direction
 
             source_vtx_pos = cmds.xform('{}.vtx[{}]'.format(source_mesh, shape_vtx_id), q=True, ws=True, t=True)
@@ -75,6 +81,7 @@ def shape_transfer(source_mesh,target_mesh,shape_mesh):
 
             # get new shape point
             scale = target_size / source_size
+            scale = 0.5
             shape_point_matrix = om.MMatrix(((1,0,0,0),(0,1,0,0),(0,0,1,0),(shape_vtx_pos[0],shape_vtx_pos[1],shape_vtx_pos[2],1)))
             scale_matrix = om.MMatrix(((scale,0,0,0),(0,scale,0,0),(0,0,scale,0),(0,0,0,1)))
             inverted_source_matrix = source_matrix.inverse()
@@ -86,11 +93,11 @@ def shape_transfer(source_mesh,target_mesh,shape_mesh):
             new_point = scaled_shape * target_matrix
             vertex_pos[shape_vtx_id] = (new_point.getElement(3,0),new_point.getElement(3,1),new_point.getElement(3,2))
 
-    new_shape = cmds.duplicate(target_mesh, n = target_mesh+'_shapeTransfer')[0]
+    new_shape = cmds.duplicate(target_mesh, n = shape+'_transfered')[0]
 
     for vtx in vertex_pos:
         cmds.xform('{}.vtx[{}]'.format(new_shape,vtx),ws = True, t = vertex_pos[vtx])
 
 
 for shape in cmds.ls(sl = True):
-    shape_transfer('head_ref_topo','head_ref_topo2',shape)
+    shape_transfer('head_ref_topo','head_ref_topo3',shape)
