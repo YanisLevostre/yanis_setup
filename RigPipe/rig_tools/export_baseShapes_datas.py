@@ -8,9 +8,10 @@ vertex_count = cmds.polyEvaluate(mesh, vertex=True)
 name = 'cartoon'
 folder = 'C:/Users/Yanis/PycharmProjects/yanis_setup/datas/'
 shapes_list = cmds.listRelatives(shape_grp,children = True)
-
 data = {}
 
+data['vertexCount'] = vertex_count
+data['shapeList'] = shapes_list
 data['baseMesh'] = {}
 for shape in shapes_list:
     data[shape] = {}
