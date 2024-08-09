@@ -16,13 +16,21 @@ lower_mouth = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 53, 5
                193, 194, 195, 196, 197, 199, 200, 201, 203, 213, 214, 224, 225, 233, 234, 235, 253, 254, 255, 256, 257,
                258, 259, 274, 275, 276]
 
-def shape_transfer(target_topo_mesh,target_mesh,target_side_mesh,target_mouth_mesh,smooth):
+L_upperLid = [62,0,96,97,61,6,67,8,66,10,65,12]
+L_lowerLid = [12,65,5,64,63,3,0,62]
+R_upperLid = [155,205,236,237,204,161,210,163,209,165,208,167]
+R_lowerLid = [167,208,160,207,158,206,205,155]
+
+eyeLids_joint_order = {'anchor':4,'L_upper':0,'L_lower':1,'R_upper':2,'R_lower':3}
+def shape_transfer(target_topo_mesh,target_mesh,target_side_mesh,target_mouth_mesh,target_eyeLids_mesh,eyeLids_joint_order,smooth):
     shapesList = data['shapeList']
     vertex_count = data['vertexCount']
     target_vertex_count = cmds.polyEvaluate(target_mesh, v=True)
     target_vertex_bind = {}
     side_skinCluster = mel.eval('findRelatedSkinCluster '+target_side_mesh)
     mouth_skinCluster = mel.eval('findRelatedSkinCluster ' + target_mouth_mesh)
+    eyeLid_skinCluster = mel.eval('findRelatedSkinCluster ' + target_eyeLids_mesh)
+
 
     for target_mesh_vtx in range(target_vertex_count):
         target_mesh_vtx_pos = cmds.xform('{}.vtx[{}]'.format(target_mesh, target_mesh_vtx), ws=True, t=True, q=True)
@@ -162,6 +170,7 @@ def shape_transfer(target_topo_mesh,target_mesh,target_side_mesh,target_mouth_me
                 inf_dict = {}
                 inf_list = []
                 inf_mouth_dict = {}
+                inf_eyeLid_dict = {}
                 x = target_mesh_vtx_pos[0]
                 y = target_mesh_vtx_pos[1]
                 z = target_mesh_vtx_pos[2]
@@ -181,8 +190,23 @@ def shape_transfer(target_topo_mesh,target_mesh,target_side_mesh,target_mouth_me
                         else:
                             inf_mouth = cmds.skinPercent(mouth_skinCluster, '{}.vtx[{}]'.format(target_mouth_mesh, vtx), query=True,
                                              value=True)[0]
-                        if inf_side * inf_mouth != 0:
+                        inf_eyeLid = 0
+                        if topo_vtx in L_upperLid:
+                            inf_eyeLid += cmds.skinPercent(eyeLid_skinCluster,'{}.vtx[{}]'.format(target_eyeLids_mesh, vtx),query=True, value=True)[eyeLids_joint_order['L_upper']]
+                        if topo_vtx in L_lowerLid:
+                            inf_eyeLid += cmds.skinPercent(eyeLid_skinCluster,'{}.vtx[{}]'.format(target_eyeLids_mesh, vtx),query=True, value=True)[eyeLids_joint_order['L_lower']]
+                        if topo_vtx in R_upperLid:
+                            inf_eyeLid += cmds.skinPercent(eyeLid_skinCluster,'{}.vtx[{}]'.format(target_eyeLids_mesh, vtx),query=True, value=True)[eyeLids_joint_order['R_upper']]
+                        if topo_vtx in R_lowerLid:
+                            inf_eyeLid += cmds.skinPercent(eyeLid_skinCluster,'{}.vtx[{}]'.format(target_eyeLids_mesh, vtx),query=True, value=True)[eyeLids_joint_order['R_lower']]
+                        if topo_vtx not in L_upperLid + L_lowerLid + R_upperLid + R_lowerLid:
+                            inf_eyeLid = 1
+
+
+
+                        if inf_side * inf_mouth * inf_eyeLid != 0:
                             inf_mouth_dict[topo_vtx] = inf_mouth
+                            inf_eyeLid_dict[topo_vtx] = inf_eyeLid
                             inf_dict[topo_vtx] = target_vertex_bind[vtx][topo_vtx]
                             inf_list.append(target_vertex_bind[vtx][topo_vtx])
 
@@ -192,20 +216,22 @@ def shape_transfer(target_topo_mesh,target_mesh,target_side_mesh,target_mouth_me
                         for topo_vtx in inf_dict:
                             inf_transfer = inf_dict[topo_vtx] / sum_inf
                             inf_mouth = inf_mouth_dict[topo_vtx]
+                            inf_eyeLid = inf_eyeLid_dict[topo_vtx]
                             base = cmds.xform('{}.vtx[{}]'.format(target_topo_mesh, topo_vtx), ws=True, t=True, q=True)
                             target = vertex_pos[topo_vtx]
-                            x += (target[0] - base[0]) * inf_transfer * inf_side * inf_mouth
-                            y += (target[1] - base[1]) * inf_transfer * inf_side * inf_mouth
-                            z += (target[2] - base[2]) * inf_transfer * inf_side * inf_mouth
+                            x += (target[0] - base[0]) * inf_transfer * inf_side * inf_mouth * inf_eyeLid
+                            y += (target[1] - base[1]) * inf_transfer * inf_side * inf_mouth * inf_eyeLid
+                            z += (target[2] - base[2]) * inf_transfer * inf_side * inf_mouth * inf_eyeLid
                     else:
                         for topo_vtx in inf_dict:
                             inf_transfer = 1
                             inf_mouth = inf_mouth_dict[topo_vtx]
+                            inf_eyeLid = inf_eyeLid_dict[topo_vtx]
                             base = cmds.xform('{}.vtx[{}]'.format(target_topo_mesh, topo_vtx), ws=True, t=True, q=True)
                             target = vertex_pos[topo_vtx]
-                            x += (target[0] - base[0]) * inf_transfer * inf_side * inf_mouth
-                            y += (target[1] - base[1]) * inf_transfer * inf_side * inf_mouth
-                            z += (target[2] - base[2]) * inf_transfer* inf_side * inf_mouth
+                            x += (target[0] - base[0]) * inf_transfer * inf_side * inf_mouth * inf_eyeLid
+                            y += (target[1] - base[1]) * inf_transfer * inf_side * inf_mouth * inf_eyeLid
+                            z += (target[2] - base[2]) * inf_transfer* inf_side * inf_mouth * inf_eyeLid
 
 
                 #deformed_shape[vtx] = vertex_pos[vtx]
@@ -213,4 +239,4 @@ def shape_transfer(target_topo_mesh,target_mesh,target_side_mesh,target_mouth_me
 
 
 
-shape_transfer('head_ref_topo3','_kevin','kevin_sides','kevin_mouth',6)
+shape_transfer('head_ref_topo3','_kevin','kevin_sides','kevin_mouth','kevin_eyeLid',eyeLids_joint_order,6)
