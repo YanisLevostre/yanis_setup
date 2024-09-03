@@ -3,23 +3,19 @@ import maya.api.OpenMaya as om
 import json
 
 folder = 'C:/Users/Yanis/PycharmProjects/yanis_setup/datas/'
-base_name = 'cartoon'
+base_name = 'cartoon_hiRes'
 with open(folder+base_name+'.json') as json_data:
     data = json.load(json_data)
     json_data.close()
 
 
-vertex_exception = [60,111,57,56,58,115,59,253,203,201,202,249,52,112,51]
+vertex_exception = data['exception']
 
-lower_mouth = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 53, 54, 55, 56, 58, 59, 71, 72, 73, 83, 84,
-               85, 93, 94, 95, 115, 116, 117, 118, 119, 120, 121, 138, 139, 140, 141, 186, 187, 188, 189, 190, 191, 192,
-               193, 194, 195, 196, 197, 199, 200, 201, 203, 213, 214, 224, 225, 233, 234, 235, 253, 254, 255, 256, 257,
-               258, 259, 274, 275, 276]
-
-L_upperLid = [62,0,96,97,61,6,67,8,66,10,65,12]
-L_lowerLid = [12,65,5,64,63,3,0,62]
-R_upperLid = [155,205,236,237,204,161,210,163,209,165,208,167]
-R_lowerLid = [167,208,160,207,158,206,205,155]
+lower_mouth =data['lowerMouth']
+L_upperLid = data['L_upperLid']
+L_lowerLid = data['L_lowerLid']
+R_upperLid = data['R_upperLid']
+R_lowerLid = data['R_lowerLid']
 
 eyeLids_joint_order = {'anchor':4,'L_upper':0,'L_lower':1,'R_upper':2,'R_lower':3}
 def shape_transfer(target_topo_mesh,target_mesh,target_side_mesh,target_mouth_mesh,target_eyeLids_mesh,eyeLids_joint_order,smooth):
@@ -67,13 +63,14 @@ def shape_transfer(target_topo_mesh,target_mesh,target_side_mesh,target_mouth_me
             temp_source_vtx_pos = data['baseMesh'][str(shape_vtx_id)]
             if shape_vtx_pos != temp_source_vtx_pos:
                 for source_vtx_id in range(vertex_count):
-                    source_vtx_pos = data['baseMesh'][str(source_vtx_id)]
-                    vector = om.MVector(source_vtx_pos[0] - shape_vtx_pos[0],
-                                        source_vtx_pos[1] - shape_vtx_pos[1],
-                                        source_vtx_pos[2] - shape_vtx_pos[2])
+                    if source_vtx_id not in vertex_exception:
+                        source_vtx_pos = data['baseMesh'][str(source_vtx_id)]
+                        vector = om.MVector(source_vtx_pos[0] - shape_vtx_pos[0],
+                                            source_vtx_pos[1] - shape_vtx_pos[1],
+                                            source_vtx_pos[2] - shape_vtx_pos[2])
 
-                    distance = vector.length()
-                    distance_dict[distance] = source_vtx_id
+                        distance = vector.length()
+                        distance_dict[distance] = source_vtx_id
 
                 if shape_vtx_id in vertex_exception:
                     for id in vertex_exception:
@@ -94,10 +91,10 @@ def shape_transfer(target_topo_mesh,target_mesh,target_side_mesh,target_mouth_me
                                             source_ref_vtx_pos[1] - source_vtx_pos[1],
                                             source_ref_vtx_pos[2] - source_vtx_pos[2])
                 source_size = vector_primary.length()
-                vector_primary = vector_primary.normalize()
+                #vector_primary = vector_primary.normalize()
                 vector_up = om.MVector(0, 1, 1)
-                vector_secondary = vector_primary.normalize() ^ vector_up.normalize()
-                vector_tertiary = vector_primary.normalize() ^ vector_secondary.normalize()
+                vector_secondary = vector_primary ^ vector_up
+                vector_tertiary = vector_primary ^ vector_secondary
 
                 source_matrix = om.MMatrix(((vector_primary.x, vector_primary.y, vector_primary.z, 0),
                                             (vector_secondary.x, vector_secondary.y, vector_secondary.z, 0),
@@ -114,11 +111,11 @@ def shape_transfer(target_topo_mesh,target_mesh,target_side_mesh,target_mouth_me
                                             target_ref_vtx_pos[1] - target_vtx_pos[1],
                                             target_ref_vtx_pos[2] - target_vtx_pos[2])
                 target_size = vector_primary.length()
-                vector_primary = vector_primary.normalize()
+                #vector_primary = vector_primary.normalize()
 
                 vector_up = om.MVector(0, 1, 1)
-                vector_secondary = vector_primary.normalize() ^ vector_up.normalize()
-                vector_tertiary = vector_primary.normalize() ^ vector_secondary.normalize()
+                vector_secondary = vector_primary ^ vector_up
+                vector_tertiary = vector_primary ^ vector_secondary
 
                 target_matrix = om.MMatrix(((vector_primary.x, vector_primary.y, vector_primary.z, 0),
                                             (vector_secondary.x, vector_secondary.y, vector_secondary.z, 0),
@@ -143,7 +140,7 @@ def shape_transfer(target_topo_mesh,target_mesh,target_side_mesh,target_mouth_me
                 scale_matrix = om.MMatrix(((scale,0,0,0),(0,scale,0,0),(0,0,scale,0),(0,0,0,1)))
                 inverted_source_matrix = source_matrix.inverse()
                 shape_deplacement = shape_point_matrix * inverted_source_matrix
-                scaled_shape = shape_deplacement* scale_matrix
+                scaled_shape = shape_deplacement * scale_matrix
                 new_point = scaled_shape * target_matrix
                 vertex_pos[shape_vtx_id] = (new_point.getElement(3,0),new_point.getElement(3,1),new_point.getElement(3,2))
 
@@ -239,4 +236,4 @@ def shape_transfer(target_topo_mesh,target_mesh,target_side_mesh,target_mouth_me
 
 
 
-shape_transfer('head_ref_topo3','_kevin','kevin_sides','kevin_mouth','kevin_eyeLid',eyeLids_joint_order,6)
+shape_transfer('head_ref_topo3','_kevin','kevin_sides','kevin_mouth','kevin_eyeLid',eyeLids_joint_order,9)
