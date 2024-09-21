@@ -32,6 +32,11 @@ class Module():
         attrs_datas = cmds.getAttr('attrs.notes')
         Module.attrs = ast.literal_eval(attrs_datas)
 
+    #@classmethod
+    #def add_item(cls,):
+
+
+
 
     def export_datas(self,file_path = 'D:/My Drive/rig/pipe/module/'):
         folder = file_path + self.name

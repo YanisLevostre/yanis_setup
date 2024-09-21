@@ -1,0 +1,16 @@
+{"L_in_forehead":
+{"in_curve":["M_anchor","L_in_forehead","R_in_forehead","L_betweenEyes"],
+  "out_curve":["M_anchor","L_in_forehead","L_mid_forehead","L_betweenEyes"]},
+  "L_mid_forehead":
+  {"in_curve":["M_anchor","L_in_forehead","L_mid_forehead","L_betweenEyes"],
+  "out_curve":["M_anchor","L_out_forehead","L_mid_forehead","L_out_eyeOrbicular"],
+  "up_curve":["L_in_forehead","M_anchor","L_mid_forehead","L_out_forehead"],
+  "down_curve":["L_in_forehead","L_top_eyeOrbicular","L_mid_forehead","L_out_forehead"]},
+  "L_out_forehead":
+  {"in_curve":["M_anchor","L_out_forehead","L_mid_forehead","L_betweenEyes"],
+  "out_curve":["M_anchor","L_out_forehead","L_mid_forehead","L_out_eyeOrbicular"],
+  "up_curve":["L_in_forehead","M_anchor","L_mid_forehead","L_out_forehead"],
+  "down_curve":["L_in_forehead","L_top_eyeOrbicular","L_mid_forehead","L_out_forehead"]}
+
+
+}

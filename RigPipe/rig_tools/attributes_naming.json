@@ -1,0 +1,74 @@
+{
+  "arm":{
+    "C_limb_attribut_input":
+  {
+    "ikfk_switch": {
+      "name":"arm_switch_ikFk",
+      "separator": "arm",
+      "controls":["C_limb_attributes_ctrl"],
+      "type": "enum",
+      "enum": "ik:fk"
+    },
+    "autoStretch": {
+      "name":"arm_autoStretch",
+      "separator": "arm",
+      "type": "bool",
+      "controls":["C_limb_attributes_ctrl"]
+
+    },
+    "pinElbow": {
+      "name":"pinElbow",
+      "type": "bool",
+      "separator": "arm",
+      "controls":["C_limb_attributes_ctrl"]
+    },
+    "bendA_tangent": {
+      "name":"bendA_tangent",
+      "separator": "arm",
+      "type": "float",
+      "controls":["C_limb_attributes_ctrl"],
+      "min": 0,
+      "max": 1
+    },
+    "bendB_tangent": {
+      "name":"bendB_tangent",
+      "separator": "arm",
+      "type": "float",
+      "controls":["C_limb_attributes_ctrl"],
+      "min": 0,
+      "max": 1
+    }
+  },
+    "C_limb_followPlug_input":
+    {
+      "follow": {
+        "name": "arm_Space",
+        "separator": "arm_space",
+        "controls":["C_limb_attributes_ctrl"],
+        "type": "enum",
+        "enum": "shoulder:chest:body:root:layout:general:world"
+      }
+    },
+    "C_hand_Ik_followPlug_input":
+    {
+      "follow": {
+        "name": "handIk_space",
+        "separator": "arm_space",
+        "controls":["C_limb_attributes_ctrl"],
+        "type": "enum",
+        "enum": "shoulder:chest:body:root:layout:general:world"
+      }
+    },
+    "C_poleVector_followPlug_input":
+    {
+      "follow": {
+        "name": "poleVector_space",
+        "separator": "arm_space",
+        "controls":["C_limb_attributes_ctrl"],
+        "type": "enum",
+        "enum": "shoulder:chest:body:root:layout:general:world"
+      }
+    }
+
+  }
+}

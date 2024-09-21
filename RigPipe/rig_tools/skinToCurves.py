@@ -47,14 +47,14 @@ def curvePoints(skinCluster, start_inf, inf_1, inf_2, end_inf):
         if distance(point, pos) == 0:
             vertices_cross.remove(vtx)
 
-    controlPoints = []
+    controlPoints = [startPos]
     for i in range(100):
 
         closePoint = {}
         closePointList = []
         for vtx in vertices_cross:
             pos = cmds.xform(vtx, q=True, ws=True, t=True)
-            if distance(point, pos) < 0.1:
+            if distance(point, pos) < 0.16:
                 closePoint[distance(point, pos)] = vtx
                 closePointList.append(vtx)
         for v in closePointList:
@@ -68,7 +68,7 @@ def curvePoints(skinCluster, start_inf, inf_1, inf_2, end_inf):
             break
 
     curve = cmds.curve(p=controlPoints)
-    cmds.rebuildCurve(curve,s =2)
+    cmds.rebuildCurve(curve,s =3)
+    return curve
 
 
-curvePoints('skinCluster1', 'L_in_forehead', 'L_mid_forehead', 'L_top_eyeOrbicular', 'L_out_forehead')

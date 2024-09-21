@@ -3,7 +3,6 @@ import maya.OpenMaya as OpenMaya
 import maya.OpenMayaMPx as OpenMayaMPx
 from maya.api.OpenMaya import MVector, MPoint, MMatrix
 import math
-
 nodeName = "YL_intersection"
 nodeId = OpenMaya.MTypeId(0x200fff)
 
