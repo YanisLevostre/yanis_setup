@@ -1,8 +1,9 @@
 import maya.cmds as cmds
-from constraint import multMatrix
+import sys
+sys.path.insert(0, 'C:/Users/Yanis/PycharmProjects/yanis_setup/' )
+from RigPipe.lib.constraint import *
 
-
-def do_spaceswitch(module_name=None, guideList=None, parent_list=None,
+def do_spaceswitch(module_name=None,node_name = None, guideList=None, parent_list=None,
                    channel=['translate', 'rotate', 'scale']):
 
     ''' module_name = C_module
@@ -11,17 +12,18 @@ def do_spaceswitch(module_name=None, guideList=None, parent_list=None,
 
 
     # create groups and add locators
-    space_offsets = cmds.group(em=True, n=module_name + '_spaceOffsets_grp')
-    space_inputs = cmds.group(em=True, n=module_name + '_spaceInputs_grp')
-    cmds.parent(space_offsets, space_inputs, module_name + '_input_grp')
-    follow = cmds.createNode('transform', n=module_name + "_followPlug_input")
+    space_offsets = cmds.group(em=True, n=node_name + '_spaceOffsets_grp')
+    space_inputs = cmds.group(em=True, n=node_name + '_spaceInputs_grp')
+    follow = cmds.createNode('transform', n=node_name + "_followPlug_input")
+    cmds.parent(space_offsets, space_inputs,follow, module_name + '_plugs_grp')
+
 
     drivers = parent_list
     enum_list = ":".join(drivers)
     cmds.addAttr(follow, ln='follow', k=True, at='enum', en=enum_list)
     for i, driver in enumerate(drivers):
-        grp_offset = cmds.group(em=True, n='{}_{}_spaceOffset_grp'.format(module_name, driver))
-        grp_input = cmds.group(em=True, n='{}_{}_spaceInput_grp'.format(module_name, driver))
+        grp_offset = cmds.group(em=True, n='{}_{}_spaceOffset_grp'.format(node_name, driver))
+        grp_input = cmds.group(em=True, n='{}_{}_spaceInput_grp'.format(node_name, driver))
         cmds.parent(grp_offset, space_offsets)
         cmds.parent(grp_input, space_inputs)
     for guide in guideList:
@@ -31,8 +33,8 @@ def do_spaceswitch(module_name=None, guideList=None, parent_list=None,
         blend_matrix = cmds.createNode('blendMatrix', n=name + '_blendMatrix')
         out_node = guideList[guide]
         for i, driver in enumerate(drivers):
-            grp_offset = '{}_{}_spaceOffset_grp'.format(module_name, driver)
-            grp_input = '{}_{}_spaceInput_grp'.format(module_name, driver)
+            grp_offset = '{}_{}_spaceOffset_grp'.format(node_name, driver)
+            grp_input = '{}_{}_spaceInput_grp'.format(node_name, driver)
             loc_space = cmds.spaceLocator(n='{}_{}_loc'.format(name, driver))[0]
             cmds.parent(loc_space, grp_input)
 

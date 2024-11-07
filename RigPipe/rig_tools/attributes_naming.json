@@ -70,5 +70,61 @@
       }
     }
 
+  },
+  "leg":{
+    "C_limb_attribut_input":
+  {
+    "ikfk_switch": {
+      "name":"leg_switch_ikFk",
+      "separator": "leg",
+      "controls":["C_limb_attributes_ctrl"],
+      "type": "enum",
+      "enum": "ik:fk"
+    },
+    "autoStretch": {
+      "name":"leg_autoStretch",
+      "separator": "leg",
+      "type": "bool",
+      "controls":["C_limb_attributes_ctrl"]
+
+    },
+    "pinElbow": {
+      "name":"pinKnee",
+      "type": "bool",
+      "separator": "leg",
+      "controls":["C_limb_attributes_ctrl"]
+    }
+  },
+    "C_limb_followPlug_input":
+    {
+      "follow": {
+        "name": "leg_Space",
+        "separator": "leg_space",
+        "controls":["C_limb_attributes_ctrl"],
+        "type": "enum",
+        "enum": "shoulder:chest:body:root:layout:general:world"
+      }
+    },
+    "C_hand_Ik_followPlug_input":
+    {
+      "follow": {
+        "name": "handIk_space",
+        "separator": "arm_space",
+        "controls":["C_limb_attributes_ctrl"],
+        "type": "enum",
+        "enum": "shoulder:chest:body:root:layout:general:world"
+      }
+    },
+    "C_poleVector_followPlug_input":
+    {
+      "follow": {
+        "name": "poleVector_space",
+        "separator": "arm_space",
+        "controls":["C_limb_attributes_ctrl"],
+        "type": "enum",
+        "enum": "shoulder:chest:body:root:layout:general:world"
+      }
+    }
+
   }
 }

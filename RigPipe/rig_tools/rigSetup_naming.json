@@ -13,6 +13,20 @@
     "handSelfIkHandle": "handIkHandle"
 
   },
+  "quadLimb": {
+    "limb00_": "quadLimb00_",
+    "limb01_": "quadLimb01_",
+    "limb02_": "quadLimb02_",
+    "limb_": "quadLimb_",
+    "limb00Bend_": "quadLimb00Bend_",
+    "limb01ABend_": "quadLimb01ABend_",
+    "limb01BBend_": "quadLimb01BBend_",
+    "limb02Bend_": "quadLimb02Bend_",
+    "limb00MidBend_": "quadLimb00MidBend_",
+    "limb01MidBend_": "quadLimb01MidBend_",
+    "handSelfIkHandle": "handSelfIkHandle"
+
+  },
   "leg": {
     "limb00_": "thigh_",
     "limb01_": "knee_",
@@ -27,8 +41,30 @@
     "limb01MidBend_": "kneeMidBend_",
     "handIkHandle_": "footIkHandle_"
   },
+  "quadBackLeg": {
+    "quadLimb00_": "thigh_",
+    "quadLimb01_": "knee_",
+    "quadLimb02_": "ankle_",
+    "quadLimb03_": "footEnd_",
+    "quadLimb_": "backLeg_",
+    "hand_": "toe01_",
+    "quadLimb00Bend_": "thighBend_",
+    "quadLimb01ABend_": "kneeABend_",
+    "quadLimb01BBend_": "kneeBBend_",
+    "quadLimb02Bend_": "ankleBend_",
+    "quadLimb00MidBend_": "thighMidBend_",
+    "quadLimb01MidBend_": "kneeMidBend_",
+    "quadLimbIkHandle_": "footIkHandle_"
+  },
+
   "clavicle": {
     "clavicleEnd_": "shoulder_"
+  },
+    "quadFoot": {
+      "ankle": "footEnd_",
+      "foot": "toe01_",
+      "toe_": "toe02_"
+
   },
   "hip": {
     "clavicleEnd_": "thigh_",

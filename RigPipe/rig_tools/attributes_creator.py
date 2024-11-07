@@ -12,7 +12,6 @@ def attributes_connector(namespace):
     for name in data:
         attribute_grp = []
         controls = {}
-        attr_dict = {}
         for grp in data[name]:
             attribute_grp.append(grp)
         for grp in attribute_grp:
