@@ -4,7 +4,7 @@ import maya.OpenMayaMPx as OpenMayaMPx
 from maya.api.OpenMaya import MVector, MPoint, MMatrix
 import math
 
-sys.path.insert(0, 'C:/Users/Yanis/PycharmProjects/yanis_setup/')
+sys.path.insert(0, 'C:/Users/levos/PycharmProjects/yanis_setup/')
 from RigPipe.rig_tools.vectorIntersect_math import quadratic_bezier_curve, vector_intersect
 
 nodeName = "YL_intersection"
