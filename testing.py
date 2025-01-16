@@ -2,7 +2,7 @@ import maya.cmds as cmds
 import maya.OpenMaya as OpenMaya
 import math
 from maya.api.OpenMaya import MVector, MPoint, MMatrix
-
+print("test")
 point1 = OpenMaya.MPoint(0,0,0)
 point2 = OpenMaya.MPoint(0,1.5,0.5)
 point3 = OpenMaya.MPoint(0,1,5)
