@@ -270,7 +270,8 @@ def vector_intersect(vector_1_a_matrix, vector_1_b_matrix, vector_2_a_matrix, ve
         temp_upVector = temp_upVector.normalize()
 
         side_vector = targetVector ^ temp_upVector
-        upVector = side_vector ^targetVector
+        upVector = side_vector ^ targetVector
+        upVector = upVector.normalize()
 
         matrix = (targetVector[0],targetVector[1],targetVector[2],0,
                   upVector[0],upVector[1],upVector[2],0,

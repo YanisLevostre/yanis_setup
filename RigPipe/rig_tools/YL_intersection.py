@@ -7,7 +7,7 @@ import math
 sys.path.insert(0, 'C:/Users/levos/PycharmProjects/yanis_setup/')
 from RigPipe.rig_tools.vectorIntersect_math import quadratic_bezier_curve, vector_intersect
 
-nodeName = "YL_intersection"
+nodeName = "YL_compress"
 nodeId = OpenMaya.MTypeId(0x200fff)
 
 
@@ -139,28 +139,28 @@ def nodeInitializer():
     mFnAttr.setReadable(1)
     mFnAttr.setWritable(1)
     mFnAttr.setStorable(1)
-    mFnAttr.setKeyable(0)
+    mFnAttr.setKeyable(1)
 
     YL_intersection.inVec1_b = mFnAttr.create('vect_1_b', 'vect_1_b')
 
     mFnAttr.setReadable(1)
     mFnAttr.setWritable(1)
     mFnAttr.setStorable(1)
-    mFnAttr.setKeyable(0)
+    mFnAttr.setKeyable(1)
 
     YL_intersection.inVec2_a = mFnAttr.create('vect_2_a', 'vect_2_a')
 
     mFnAttr.setReadable(1)
     mFnAttr.setWritable(1)
     mFnAttr.setStorable(1)
-    mFnAttr.setKeyable(0)
+    mFnAttr.setKeyable(1)
 
     YL_intersection.inVec2_b = mFnAttr.create('vect_2_b', 'vect_2_b')
 
     mFnAttr.setReadable(1)
     mFnAttr.setWritable(1)
     mFnAttr.setStorable(1)
-    mFnAttr.setKeyable(0)
+    mFnAttr.setKeyable(1)
 
     YL_intersection.inBindVec1_a = mFnAttr.create('bind_vect_1_a', 'bind_vect_1_a')
 
